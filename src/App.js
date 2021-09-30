@@ -24,14 +24,14 @@ import {drawMesh} from "./utilities"
 function App() {
   //set up references
   const webcamRef = useRef(null);
-  const canvasRef = useRef (null);
+  const canvasRef = useRef(null);
 
 
   // load facemesh
   const runFacemesh = async () =>{
-    console.log('hi')
-    if(webcamRef!==null){
+    if(webcamRef !== null){
     const net = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+
     setInterval(()=>{
       main(net);
     },150)
@@ -65,7 +65,8 @@ function App() {
   runFacemesh();
   */
   async function main(model) {
-      const video = webcamRef.current.video;
+    if(typeof webcamRef.currrent !== "undefined" && webcamRef.current !== null && webcamRef.current.video.readyState===4){
+        const video = webcamRef.current.video
         const videoWidth = webcamRef.current.video.videoWidth;
         const videoHeight = webcamRef.current.video.videoHeight;
         //set video width
@@ -75,16 +76,16 @@ function App() {
         canvasRef.current.width = videoWidth;
         canvasRef.current.height = videoHeight;
     // Load the MediaPipe Facemesh package.
-    if (webcamRef!==null){
+
 
     // Pass in a video stream (or an image, canvas, or 3D tensor) to obtain an
     // array of detected faces from the MediaPipe graph. If passing in a video
     // stream, a single prediction per frame will be returned.
     const predictions = await model.estimateFaces({
-      input: video, predictIrises:true
+      input: video
     });
     predictions.forEach(prediction=>{
-      console.log(prediction.scaledMesh)
+      //console.log(prediction.scaledMesh)
     }
     )
     if (predictions.length > 0) {
@@ -123,12 +124,15 @@ function App() {
 
       for (let i = 0; i < predictions.length; i++) {
         const keypoints = predictions[i].scaledMesh;
+        const header = document.getElementById('webcam');
+        const elementPosition = header.getBoundingClientRect()
+        console.log(elementPosition)
 
         // Log facial keypoints.
         for (let i = 0; i < keypoints.length; i++) {
           const [x, y, z] = keypoints[i];
 
-          console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
+        //  console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
         }
       }
     }
@@ -142,7 +146,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <Webcam ref={webcamRef} style={
+      <Webcam id="webcam" ref={webcamRef} style={
         {
         position:"absolute",
         marginLeft: "auto",
