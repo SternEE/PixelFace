@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+#canvas{
+  height: 100vh;
+  width: 100vw;
+}
+
+#webcam{
+  height: 100vh;
+  width: 100vw;
+}

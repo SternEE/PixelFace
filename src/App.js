@@ -29,13 +29,10 @@ function App() {
 
   // load facemesh
   const runFacemesh = async () =>{
-    if(webcamRef !== null){
     const net = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
-
     setInterval(()=>{
       main(net);
-    },150)
-  }
+    },1500)
   };
 /*
   // detect function
@@ -65,7 +62,8 @@ function App() {
   runFacemesh();
   */
   async function main(model) {
-    if(typeof webcamRef.currrent !== "undefined" && webcamRef.current !== null && webcamRef.current.video.readyState===4){
+    if(webcamRef.current !== null){
+      console.log('got to here')
         const video = webcamRef.current.video
         const videoWidth = webcamRef.current.video.videoWidth;
         const videoHeight = webcamRef.current.video.videoHeight;
@@ -77,7 +75,6 @@ function App() {
         canvasRef.current.height = videoHeight;
     // Load the MediaPipe Facemesh package.
 
-
     // Pass in a video stream (or an image, canvas, or 3D tensor) to obtain an
     // array of detected faces from the MediaPipe graph. If passing in a video
     // stream, a single prediction per frame will be returned.
@@ -85,12 +82,12 @@ function App() {
       input: video
     });
     predictions.forEach(prediction=>{
-      //console.log(prediction.scaledMesh)
+      console.log(prediction.scaledMesh)
     }
     )
     if (predictions.length > 0) {
       const ctx = canvasRef.current.getContext("2d")
-    drawMesh(predictions, ctx)
+      drawMesh(predictions, ctx)
       /*
       `predictions` is an array of objects describing each detected face, for example:
 
@@ -126,21 +123,20 @@ function App() {
         const keypoints = predictions[i].scaledMesh;
         const header = document.getElementById('webcam');
         const elementPosition = header.getBoundingClientRect()
-        console.log(elementPosition)
+
+        console.log('position: ',elementPosition)
 
         // Log facial keypoints.
         for (let i = 0; i < keypoints.length; i++) {
           const [x, y, z] = keypoints[i];
-
-        //  console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
+          if (i===398) console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
         }
       }
     }
   }
   }
-  if (webcamRef){
+
   runFacemesh();
-  }
 
 
   return (
