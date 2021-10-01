@@ -2645,23 +2645,34 @@ export const TRIANGULATION = [
   255,
 ];
 
-// Triangle drawing method
 /*
-const drawPath = (ctx, points, closePath) => {
-  const region = new Path2D();
-  region.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i++) {
-    const point = points[i];
-    region.lineTo(point[0], point[1]);
-  }
 
-  if (closePath) {
-    region.closePath();
-  }
-  ctx.strokeStyle = "grey";
-  ctx.stroke(region);
-};
+
+X/Y coordinates of specific dots:
+pointX: canvas left or canvas x + x coordinates from model
+pointY: canvas top or canvas y + y coordinates from model
+
+Coordinates of react elements:
+domRect = element.getBoundingClientRect();
+
+cornerY = domRect.bottom (y coordinate of bottom right corner)
+CornerX = domRect.right (x coordinate of bottom right corner)
+
+Top Left: (cornerX-width, cornerY-element height)
+Top Right: (cornerX, cornerY-element height)
+Bottom Right: (cornerX, cornerY)
+Bottom Left: (cornerX-width, cornerY)
+
+
+Is point in square pixel?
+If (domRect.right-element width<pointX<domRect.right&&domRect.bottom-element height<pointY<domRect.bottom){
+	true
+}
+
+now the question is, do i use state and the state change to update or do i use some type of event to check… the check will be if any of the points of interests (keypoints of eyes nose and mouth) are within the boundaries of a pixel
+
 */
+
 // Draw triangle
 const drawPath = (ctx, points, closePath) => {
   const region = new Path2D();
